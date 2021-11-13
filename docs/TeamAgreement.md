@@ -26,9 +26,9 @@ _Every person on your team is an asset. This is your chance to discover the hidd
 
 ### Chris
 
-- **Strengths** -
-- **How I can use them** -
-- **Professional competencies to develop** -
+- **Strengths** - Communication, persistence, resourceful
+- **How I can use them** - Consistently communicate with team throughout development process. Persist through unforeseen blockers. Utilize different resources provided through classes and online, including documentation.
+- **Professional competencies to develop** - Craft (technical), Results (Analytical Thinking), Growth Mindset (Handling Ambiguity)
 
 _Knowing that every person in your team needs to understand all aspects of the project, how do you plan to approach the day-to-day work?_
 
