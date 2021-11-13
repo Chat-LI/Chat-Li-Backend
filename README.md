@@ -11,22 +11,16 @@
 
 ---
 
-### [User Stories]()
+### [User Stories](https://github.com/orgs/Chat-LI/projects/3)
 
-### [Software Requirements]()
+### [Software Requirements](./docs/requirements.md)
 
 ---
 
 ### Wireframes
 
-<!-- ![wireframe]() -->
-
-### Domain Model
-
-<!-- ![Domain Modeling]() -->
+![wireframe](./docs/assets/wireframe.png)
 
 ### Database Schema
 
-<!-- ![Database Schema]() -->
-
-### Resources and Tools Used
+![Database Schema](./docs/assets/database-schema.png)
