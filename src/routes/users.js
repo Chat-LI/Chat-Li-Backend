@@ -5,15 +5,15 @@ const router = express.Router();
 
 const { users } = require('../models');
 
-//const acl = require('../middleware/auth/acl');
-//const bearerAuth = require('../middleware/auth/bearer');
+const acl = require('../middleware/auth/acl');
+const bearerAuth = require('../middleware/auth/bearer');
 
-router.get('/', getAllUsers);
-router.get('/:id', getOneUser);
-router.post('/', createUser);
-//router.put('/:id', updateUser);
-router.delete('/:id', deleteUser);
-
+//Adding delete permission requirements for now: Only admins should be using this routes
+router.get('/', bearerAuth, acl('delete'), getAllUsers);
+router.get('/:id', bearerAuth, acl('delete'), getOneUser);
+router.post('/', bearerAuth, acl('delete'), createUser);
+//router.put('/:id', bearerAuth, acl('delete'), updateUser);
+router.delete('/:id', bearerAuth, acl('delete'), deleteUser);
 
 async function getAllUsers(req, res) {
   let allUsers = await users.findAll({});
@@ -34,8 +34,8 @@ async function createUser(req, res) {
 
 // }
 
-async function deleteUser (req, res) {
-  let result = await users.destroy({ where: { id } });
+async function deleteUser(req, res) {
+  let result = await users.destroy({ where: { id: req.params.id } });
   res.status(201).json(result);
 }
 
