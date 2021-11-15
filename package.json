@@ -32,7 +32,7 @@
   "homepage": "https://github.com/Chat-LI/Chat-LI-Backend#readme",
   "scripts": {
     "prepare": "husky install",
-    "start": "node index.js",
+    "start": "NODE_ENV=production node index.js",
     "test": "NODE_ENV=test jest --verbose --coverage"
   },
   "devDependencies": {
