@@ -1,12 +1,10 @@
-const { Server } = require('socket.io');
+'use strict';
 
-const io = new Server();
+require('dotenv').config();
 
-io.on('connection', (socket) => {
-  console.log(`Socket ${socket.id} connected`);
-  socket.on('message', (payload) => {
-    io.emit('message', payload);
-  });
+const { db } = require('./src/models');
+const { start } = require('./src/server.js');
+
+db.sync().then(() => {
+  start(process.env.PORT || 3000);
 });
-
-io.listen(3000);
