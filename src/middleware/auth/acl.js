@@ -5,12 +5,11 @@ module.exports = (capability) => {
     try {
       if (req.user.capabilities.includes(capability)) {
         next();
-      }
-      else {
+      } else {
         next('Access Denied');
       }
     } catch (e) {
       next('Invalid Login');
     }
-  }
-}
+  };
+};
