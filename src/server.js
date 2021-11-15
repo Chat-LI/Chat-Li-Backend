@@ -1,13 +1,13 @@
 'use strict';
 
 const express = require('express');
-const app = express();
-const http = require('http');
-const server = http.createServer(app);
-const { Server } = require('socket.io');
-const io = new Server(server);
-
 const cors = require('cors');
+const { createServer } = require('http');
+const { Server } = require('socket.io');
+
+const app = express();
+const httpServer = createServer(app);
+const io = new Server(httpServer);
 
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
@@ -24,11 +24,10 @@ io.on('connection', (socket) => {
 });
 
 module.exports = {
-  server,
   start: (port) => {
     if (!port) {
       throw new Error('Missing Port');
     }
-    server.listen(port, () => console.log(`Listening on ${port}`));
+    httpServer.listen(port, () => console.log(`Listening on ${port}`));
   },
 };
