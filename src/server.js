@@ -2,6 +2,10 @@
 
 const express = require('express');
 const app = express();
+const http = require('http');
+const server = http.createServer(app);
+const { Server } = require('socket.io');
+const io = new Server(server);
 
 const cors = require('cors');
 
@@ -15,12 +19,16 @@ app.use(express.json());
 app.use(authRoutes);
 app.use('/users', userRoutes);
 
+io.on('connection', (socket) => {
+  console.log(`Socket ${socket.id} connected`);
+});
+
 module.exports = {
-  server: app,
+  server,
   start: (port) => {
     if (!port) {
       throw new Error('Missing Port');
     }
-    app.listen(port, () => console.log(`Listening on ${port}`));
+    server.listen(port, () => console.log(`Listening on ${port}`));
   },
 };
