@@ -6,9 +6,10 @@ module.exports = function (io) {
       io.to(room).emit('message', { user, message });
     });
 
-    socket.on('join', (room) => {
+    socket.on('join', ({ room, username }) => {
       console.log(`${socket.id} just joined room [${room}]`);
       socket.join(room);
+      socket.username = username;
       io.to(room).emit('user-connected', socket.id);
     });
 
