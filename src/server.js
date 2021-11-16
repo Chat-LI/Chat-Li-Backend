@@ -11,6 +11,8 @@ const io = new Server(httpServer, {
   cors: {},
 });
 
+require('./socket')(io);
+
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
 
@@ -20,24 +22,6 @@ app.use(express.json());
 //routes
 app.use(authRoutes);
 app.use('/users', userRoutes);
-
-io.on('connection', (socket) => {
-  console.log(`Socket ${socket.id} connected`);
-
-  socket.on('message', (payload) => {
-    io.emit('message', `${payload.user}: ${payload.message}`);
-  });
-
-  socket.on('join', (room) => {
-    console.log('Yes! I just joined the room!', room);
-    socket.join(room);
-  });
-
-  let payload = {
-    user: socket.id,
-  };
-  io.to('General Room 1').emit('user-connected', payload);
-});
 
 module.exports = {
   start: (port) => {
