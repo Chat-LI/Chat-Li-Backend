@@ -11,6 +11,11 @@ module.exports = function (io) {
       socket.join(room);
     });
 
+    socket.on('quit', (payload) => {
+      socket.broadcast.emit('quit', socket.id);
+      socket.disconnect(true);
+    });
+
     io.to('General Room 1').emit('user-connected', socket.id);
   });
 };
