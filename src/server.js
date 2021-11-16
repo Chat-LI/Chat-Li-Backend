@@ -25,7 +25,7 @@ io.on('connection', (socket) => {
   console.log(`Socket ${socket.id} connected`);
 
   socket.on('message', (payload) => {
-    io.emit('message', payload);
+    io.emit('message', `${payload.user}: ${payload.message}`);
   });
 
   socket.on('join', (room) => {
@@ -33,7 +33,10 @@ io.on('connection', (socket) => {
     socket.join(room);
   });
 
-  io.to('General Room 1').emit('Something');
+  let payload = {
+    user: socket.id,
+  };
+  io.to('General Room 1').emit('user-connected', payload);
 });
 
 module.exports = {
