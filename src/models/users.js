@@ -39,18 +39,23 @@ const userModel = (sequelize, DataTypes) => {
 
   model.beforeCreate(async (user) => {
     try {
+      const foundUser = await model.findOne({
+        where: { username: user.username },
+      });
+      if (foundUser) throw new Error('This username is taken');
+
       let hashedPass = await bcrypt.hash(user.password, 10);
       user.password = hashedPass;
       user.loggedIn = true;
     } catch (err) {
-      console.log(err);
+      throw err;
     }
   });
 
   model.authenticateBasic = async function (username, password) {
     try {
       const user = await this.findOne({ where: { username } });
-
+      if (!user) throw new Error('Please Register for an account first');
       if (user.loggedIn) {
         console.log(
           `User ${user.username} is already logged in`,

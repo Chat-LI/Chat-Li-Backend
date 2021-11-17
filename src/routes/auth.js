@@ -15,8 +15,9 @@ authRouter.post('/signup', async (req, res, next) => {
       token: userRecord.token,
     };
     res.status(201).json(output);
-  } catch (e) {
-    next(e.message);
+  } catch (err) {
+    console.log(err);
+    res.status(403).send(err.message);
   }
 });
 
