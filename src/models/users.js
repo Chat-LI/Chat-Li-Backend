@@ -37,6 +37,9 @@ const userModel = (sequelize, DataTypes) => {
   });
 
   model.beforeCreate(async (user) => {
+    if (typeof myVar !== 'string' || !(myVar instanceof String))
+      user.password = user.password.toString();
+
     let hashedPass = await bcrypt.hash(user.password, 10);
     user.password = hashedPass;
   });
