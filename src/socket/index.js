@@ -7,13 +7,24 @@ module.exports = function (io) {
     });
 
     socket.on('join', ({ room, username }) => {
-      console.log(`${socket.id} just joined room [${room}]`);
       socket.join(room);
-      socket.username = username;
-      io.to(room).emit('user-connected', username);
+      if (username) {
+        socket.username = username;
+      }
+      console.log(
+        `${socket.username} (${socket.id}) just joined room [${room}]`
+      );
+      io.to(room).emit('user-connected', socket.username);
+    });
+
+    socket.on('leaveRoom', (room) => {
+      socket.leave(room);
+      console.log(`${socket.username} left room: ${room}`);
+      io.to(room).emit('userLeftRoom', socket.username);
     });
 
     socket.on('quit', () => {
+      console.log(`${socket.username} (${socket.id}) quit the chat`);
       socket.broadcast.emit('quit', socket.username);
       socket.disconnect(true);
     });
@@ -22,7 +33,6 @@ module.exports = function (io) {
       let allUsers = [];
 
       for (let [key, value] of io.of('/').sockets) {
-        console.log(value.username);
         if (value.username) {
           allUsers.push(value.username);
         }
@@ -34,25 +44,26 @@ module.exports = function (io) {
     });
 
     socket.on('listRoomUsers', (room) => {
-      let socketIds;
-      let members = [];
+      try {
+        let socketIds;
+        let members = [];
 
-      for (let [key, value] of io.of('/').adapter.rooms) {
-        if (key.toLowerCase() === room) {
-          socketIds = value;
+        for (let [key, value] of io.of('/').adapter.rooms) {
+          if (key.toLowerCase() === room) {
+            socketIds = value;
+          }
         }
-      }
 
-      console.log("socket id's", socketIds);
+        if (socketIds) {
+          socketIds.forEach((socketId) => {
+            let socketInRoom = io.of('/').sockets.get(socketId);
+            members.push(socketInRoom.username);
+          });
 
-      if (socketIds) {
-        socketIds.forEach((socketId) => {
-          let socketInRoom = io.of('/').sockets.get(socketId);
-          members.push(socketInRoom.username);
-        });
-        console.log('room members', members);
-
-        io.to(socket.id).emit('listRoomUsers', { members, room });
+          io.to(socket.id).emit('listRoomUsers', { members, room });
+        }
+      } catch (err) {
+        console.log(err);
       }
     });
   });
