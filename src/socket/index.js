@@ -23,7 +23,9 @@ module.exports = function (io) {
 
       for (let [key, value] of io.of('/').sockets) {
         console.log(value.username);
-        allUsers.push(value.username);
+        if (value.username) {
+          allUsers.push(value.username);
+        }
       }
 
       if (allUsers.length > 0) {
