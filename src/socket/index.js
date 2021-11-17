@@ -44,25 +44,26 @@ module.exports = function (io) {
     });
 
     socket.on('listRoomUsers', (room) => {
-      let socketIds;
-      let members = [];
+      try {
+        let socketIds;
+        let members = [];
 
-      for (let [key, value] of io.of('/').adapter.rooms) {
-        if (key.toLowerCase() === room) {
-          socketIds = value;
+        for (let [key, value] of io.of('/').adapter.rooms) {
+          if (key.toLowerCase() === room) {
+            socketIds = value;
+          }
         }
-      }
 
-      console.log("socket id's", socketIds);
+        if (socketIds) {
+          socketIds.forEach((socketId) => {
+            let socketInRoom = io.of('/').sockets.get(socketId);
+            members.push(socketInRoom.username);
+          });
 
-      if (socketIds) {
-        socketIds.forEach((socketId) => {
-          let socketInRoom = io.of('/').sockets.get(socketId);
-          members.push(socketInRoom.username);
-        });
-        console.log('room members', members);
-
-        io.to(socket.id).emit('listRoomUsers', { members, room });
+          io.to(socket.id).emit('listRoomUsers', { members, room });
+        }
+      } catch (err) {
+        console.log(err);
       }
     });
   });
