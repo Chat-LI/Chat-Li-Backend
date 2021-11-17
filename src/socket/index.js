@@ -1,3 +1,5 @@
+const { users } = require('../models/index.js');
+
 module.exports = function (io) {
   io.on('connection', (socket) => {
     console.log(`Socket ${socket.id} connected`);
@@ -24,9 +26,14 @@ module.exports = function (io) {
     });
 
     socket.on('quit', () => {
-      console.log(`${socket.username} (${socket.id}) quit the chat`);
-      socket.broadcast.emit('quit', socket.username);
-      socket.disconnect(true);
+      try {
+        users.logout(socket.username);
+        console.log(`${socket.username} (${socket.id}) quit the chat`);
+        socket.broadcast.emit('quit', socket.username);
+        socket.disconnect(true);
+      } catch (err) {
+        console.log('Quit/logout error', err);
+      }
     });
 
     socket.on('listUsers', () => {
