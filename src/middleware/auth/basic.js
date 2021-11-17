@@ -30,6 +30,6 @@ module.exports = async (req, res, next) => {
 
   function _authError(err) {
     console.log(err);
-    res.status(403).send('Invalid Login');
+    res.status(403).send(err.message);
   }
 };
