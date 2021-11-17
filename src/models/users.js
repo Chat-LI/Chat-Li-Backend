@@ -9,6 +9,7 @@ const userModel = (sequelize, DataTypes) => {
   const model = sequelize.define('Users', {
     username: { type: DataTypes.STRING, allowNull: false, unique: true },
     password: { type: DataTypes.STRING, allowNull: false },
+    loggedIn: { type: DataTypes.BOOLEAN, allowNull: false },
     role: {
       type: DataTypes.ENUM('user', 'admin'),
       required: true,
@@ -37,29 +38,69 @@ const userModel = (sequelize, DataTypes) => {
   });
 
   model.beforeCreate(async (user) => {
-    let hashedPass = await bcrypt.hash(user.password, 10);
-    user.password = hashedPass;
+    try {
+      let hashedPass = await bcrypt.hash(user.password, 10);
+      user.password = hashedPass;
+      user.loggedIn = true;
+    } catch (err) {
+      console.log(err);
+    }
   });
 
   model.authenticateBasic = async function (username, password) {
-    const user = await this.findOne({ where: { username } });
-    const valid = await bcrypt.compare(password, user.password);
-    if (valid) {
+    try {
+      const user = await this.findOne({ where: { username } });
+
+      if (user.loggedIn) {
+        console.log(
+          `User ${user.username} is already logged in`,
+          user.loggedIn
+        );
+        throw new Error(`User ${user.username} is already logged in`);
+      } else {
+        const valid = await bcrypt.compare(password, user.password);
+        if (!valid) throw new Error('Invalid Username or Password');
+        await this.update(
+          { loggedIn: true },
+          {
+            where: {
+              username: username,
+            },
+          }
+        );
+      }
+
       return user;
+    } catch (err) {
+      throw err;
     }
-    throw new Error('Invalid User');
   };
 
   model.authenticateToken = async function (token) {
     try {
       const parsedToken = jwt.verify(token, SECRET);
       const user = this.findOne({ where: { username: parsedToken.username } });
-      if (user) {
-        return user;
-      }
-      throw new Error('User Not Found');
-    } catch (e) {
-      throw new Error(e.message);
+      if (!user) throw new Error('User Not Found');
+
+      return user;
+    } catch (err) {
+      console.log(err);
+      throw new Error(err.message);
+    }
+  };
+
+  model.logout = async function (username) {
+    try {
+      await this.update(
+        { loggedIn: false },
+        {
+          where: {
+            username: username,
+          },
+        }
+      );
+    } catch (err) {
+      console.log(err);
     }
   };
 
