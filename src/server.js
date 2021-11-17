@@ -15,6 +15,7 @@ require('./socket')(io);
 
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
+const roomsRoutes = require('./routes/rooms');
 
 app.use(cors());
 app.use(express.json());
@@ -22,6 +23,7 @@ app.use(express.json());
 //routes
 app.use(authRoutes);
 app.use('/users', userRoutes);
+app.use('/rooms', roomsRoutes);
 
 module.exports = {
   start: (port) => {
