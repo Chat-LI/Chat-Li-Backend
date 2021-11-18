@@ -8,7 +8,7 @@ module.exports = async (req, res, next) => {
     return _authError();
   }
 
-  if (req.isRoom) {
+  if (req.body.isRoom) {
     let basic = req.headers.authorization.split(' ').pop();
     let [username, password] = base64.decode(basic).split(':');
     try {
