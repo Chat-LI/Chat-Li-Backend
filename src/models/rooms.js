@@ -18,6 +18,7 @@ const roomModel = (sequelize, DataTypes) => {
 
   model.authenticateBasic = async function (roomname, password) {
     const room = await this.findOne({ where: { roomname } });
+
     const valid = await bcrypt.compare(password, room.password);
     if (valid) {
       return room;

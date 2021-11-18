@@ -8,11 +8,11 @@ module.exports = async (req, res, next) => {
     return _authError();
   }
 
-  if (req.isRoom) {
+  if (req.body.isRoom) {
     let basic = req.headers.authorization.split(' ').pop();
-    let [roomname, password] = base64.decode(basic).split(':');
+    let [username, password] = base64.decode(basic).split(':');
     try {
-      req.room = await rooms.authenticateBasic(roomname, password);
+      req.room = await rooms.authenticateBasic(username, password);
       next();
     } catch (err) {
       _authError(err);
