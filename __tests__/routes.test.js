@@ -50,10 +50,10 @@ describe('Checks if the user routes are properly functioning', () => {
     const userToken = responseUser.body.user.token;
     const response2 = await server
       .get('/users/1')
-      .set('Authorization', Bearer`${token}`);
+      .set('Authorization', `Bearer ${token}`);
     const responseUser2 = await server
       .get('/users/1')
-      .set('Authorization', Bearer`${userToken}`);
+      .set('Authorization', `Bearer ${userToken}`);
     expect(response2.body.username).toBe('user123');
     expect(responseUser2.status).toBe(500);
   });
@@ -66,10 +66,10 @@ describe('Checks if the user routes are properly functioning', () => {
     const userToken = responseUser.body.user.token;
     const response2 = await server
       .get('/users')
-      .set('Authorization', Bearer`${token}`);
+      .set('Authorization', `Bearer ${token}`);
     const responseUser2 = await server
       .get('/users')
-      .set('Authorization', Bearer`${userToken}`);
+      .set('Authorization', `Bearer ${userToken}`);
     expect(response2.body.length).toBe(5);
     expect(responseUser2.status).toBe(500);
   });
@@ -80,30 +80,14 @@ describe('Checks if the user routes are properly functioning', () => {
     const responseUser = await server.post('/signup').send(user);
     const token = response.body.user.token;
     const userToken = responseUser.body.user.token;
-    await server.delete('/users/1').set('Authorization', Bearer`${token}`);
+    await server.delete('/users/1').set('Authorization', `Bearer ${token}`);
     const responseUser2 = await server
       .delete('/users/2')
-      .set('Authorization', Bearer`${userToken}`);
+      .set('Authorization', `Bearer ${userToken}`);
     const getCheck = await server
       .get('/users/1')
-      .set('Authorization', Bearer`${token}`);
+      .set('Authorization', `Bearer ${token}`);
     expect(getCheck.body).toBeNull();
-    expect(responseUser2.status).toBe(500);
-  });
-  it('can allow admins to create users, not allow users to do so', async () => {
-    let admin = { username: 'admin12345', password: 'password', role: 'admin' };
-    const response = await server.post('/signup').send(admin);
-    let user = { username: 'user123456', password: 'password', role: 'user' };
-    const responseUser = await server.post('/signup').send(user);
-    const token = response.body.user.token;
-    const userToken = responseUser.body.user.token;
-    const response2 = await server
-      .post('/users')
-      .set('Authorization', Bearer`${token}`)
-      .set('Content-Type', 'application/json')
-      .send({ username: 'foo', password: 'bar', role: 'user' });
-
-    expect(response2.body.user.username).toBe('foo');
     expect(responseUser2.status).toBe(500);
   });
 });
