@@ -42,7 +42,6 @@ module.exports = function (io) {
     socket.on('disconnecting', () => {
       try {
         users.logout(socket.username);
-        // if user .loggedin flag is false, users.logout already ran, don't run this
         if (socket.rooms.size === 1) {
           console.log(
             `${socket.username} (${socket.id}) quit the chat before joining a room`
