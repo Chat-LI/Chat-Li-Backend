@@ -7,7 +7,7 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      SECRET: ${{ SECRET }}
+      SECRET: ${{ secrets.SECRET }}
 
     strategy:
       matrix:
