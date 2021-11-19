@@ -32,4 +32,5 @@ module.exports = {
     }
     httpServer.listen(port, () => console.log(`Listening on ${port}`));
   },
+  server: httpServer,
 };
