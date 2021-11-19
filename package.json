@@ -1,7 +1,7 @@
 {
   "name": "chat-li-backend",
   "version": "1.0.0",
-  "description": "**Chat-Li** is a CLI that allows users to communicate via the terminal. Users will be able to create accounts as well as rooms by using the **Chat-Li** API. After this they can use the CLI to chat with other users connected to the same room. Be a command line hero with **Chat-Li** and enjoy communicating with friends in a new exciting, and colorful, way!",
+  "description": "Chat-Li is a CLI that allows users to communicate via the terminal. Users will be able to create accounts as well as rooms by using the Chat-Li API. After this they can use the CLI to chat with other users connected to the same room. Be a command line hero with Chat-Li and enjoy communicating with friends in a new exciting, and colorful, way!",
   "main": "index.js",
   "repository": {
     "type": "git",
@@ -55,6 +55,7 @@
     "pg": "^8.7.1",
     "sequelize": "^6.9.0",
     "socket.io": "^4.3.2",
-    "sqlite3": "^5.0.2"
+    "sqlite3": "^5.0.2",
+    "supertest": "^6.1.6"
   }
 }
