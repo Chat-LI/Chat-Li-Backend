@@ -4,6 +4,15 @@ module.exports = function (io) {
   io.on('connection', (socket) => {
     console.log(`Socket ${socket.id} connected`);
 
+    // enables timestamp to be added to any event, can be called in TLS (template literal string)
+    function getLocaleTimeString() {
+      // time only
+      let timestamp = new Date();
+      const offset = timestamp.getTimezoneOffset() * 60000; // milliseconds
+      const local = new Date(timestamp.getTime() - offset);
+      return local.toISOString().slice(11, 19);
+    }
+
     socket.on('message', ({ message, room }) => {
       io.to(room).emit('message', { username: socket.username, message });
     });
@@ -14,7 +23,9 @@ module.exports = function (io) {
         socket.username = username;
       }
       console.log(
-        `${socket.username} (${socket.id}) just joined room [${room}]`
+        `\n@${getLocaleTimeString()} - [User] '${socket.username}' (${
+          socket.id
+        }) joined room [${room}]`
       );
       io.to(room).emit('user-connected', socket.username);
     });
