@@ -18,8 +18,12 @@ async function getAllRooms(req, res) {
 }
 
 async function createRoom(req, res) {
-  let result = await rooms.create(req.body);
-  res.status(201).json(result);
+  try {
+    let result = await rooms.create(req.body);
+    res.status(201).json(result);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 }
 
 async function deleteRoom(req, res) {

@@ -5,7 +5,6 @@ const authRouter = express.Router();
 
 const { users } = require('../models/index');
 const basicAuth = require('../middleware/auth/basic');
-const roomCheck = require('../middleware/roomCheck');
 
 authRouter.post('/signup', async (req, res, next) => {
   try {
@@ -35,7 +34,7 @@ authRouter.post('/signin', basicAuth, (req, res, next) => {
   }
 });
 
-authRouter.post('/joinroom', roomCheck, basicAuth, (req, res, next) => {
+authRouter.post('/joinroom', basicAuth, (req, res, next) => {
   const room = {
     room: req.room,
   };
